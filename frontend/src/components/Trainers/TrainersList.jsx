@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const TrainerList = () => {
     const [trainers, setTrainers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchTrainers = async () => {
@@ -23,14 +22,15 @@ const TrainerList = () => {
 
     return (
         <div className="p-6 bg-white shadow-lg rounded-lg max-w-7xl mx-auto mt-8">
-            <button
-                onClick={() => navigate(-1)}
-                className="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-            >
-                ← Go Back
-            </button>
-
-            <h2 className="text-3xl font-semibold text-blue-600 mb-6">Trainer List</h2>
+            <div className="flex justify-between mb-4">
+                <h2 className="text-3xl font-semibold text-blue-600">Trainer List</h2>
+                <Link
+                    to="/tmg"
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                >
+                    &larr; Go Back
+                </Link>
+            </div>
 
             {loading ? (
                 <div className="text-center py-10">

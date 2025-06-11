@@ -50,9 +50,7 @@ function ClientRequirementList() {
     };
 
     const handleAction = (req) => {
-
         navigate(`/clientrequirementupdate/${req._id}`);
-
     };
 
     const downloadExcel = () => {
@@ -77,7 +75,6 @@ function ClientRequirementList() {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Client Requirements');
 
-        // Generate timestamp in dd-mm-yy and 12-hour time format with AM/PM
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -96,19 +93,22 @@ function ClientRequirementList() {
         saveAs(dataBlob, `${timestamp}.xlsx`);
     };
 
-
     return (
         <>
-
             <div className="p-6">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-blue-700">Client Requirements</h2>
-                    <button
-                        onClick={downloadExcel}
-                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-                    >
-                        Download Excel
-                    </button>
+                    <div className="flex gap-2">
+                        <Link to="/trp" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                            &larr; Go Back
+                        </Link>
+                        <button
+                            onClick={downloadExcel}
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+                        >
+                            Download Excel
+                        </button>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-2 mb-4">
@@ -163,9 +163,6 @@ function ClientRequirementList() {
                                                 <td className="py-2 px-4 border">{req.participantBackground}</td>
                                                 <td className="py-2 px-4 border">{req.labRequirement}</td>
                                                 <td className="py-2 px-4 border">{req.proposalStatus}</td>
-                                                {req.proposalStatus === 'Rejected' && (
-                                                    <td className="py-2 px-4 border">{req.remarks || '—'}</td>
-                                                )}
                                                 <td className="py-2 px-4 border">{req.proposalValue}</td>
                                                 <td className="py-2 px-4 border">
                                                     <button

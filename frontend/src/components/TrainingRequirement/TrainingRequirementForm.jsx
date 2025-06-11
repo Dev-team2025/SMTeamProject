@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
+import dlitheLogo from '../../assets/logo.png'
 
 function TrainingRequirementForm() {
     const [formData, setFormData] = useState({
@@ -113,7 +114,9 @@ function TrainingRequirementForm() {
                     "commercials",
                 ].map((name) => (
                     <div key={name} className="relative">
-                        <label className="block font-semibold mb-1 text-[#1F3C88]">{name.replace(/([A-Z])/g, " $1")}</label>
+                        <label className="block font-semibold mb-1 text-[#1F3C88]">
+                            {name.replace(/([A-Z])/g, " $1")}
+                        </label>
                         <div className="relative">
                             <input
                                 type={name === "email" ? "email" : "text"}
@@ -134,19 +137,43 @@ function TrainingRequirementForm() {
                     </div>
                 ))}
 
-                {/* Availability Fields (without voice input) */}
                 <div>
                     <label className="block font-semibold mb-1 text-[#1F3C88]">Available Date for Scoping Call</label>
-                    <input type="text" name="availableForScopingCall" value={formData.availableForScopingCall} onChange={handleChange} className={inputClass} required />
+                    <input
+                        type="text"
+                        name="availableForScopingCall"
+                        value={formData.availableForScopingCall}
+                        onChange={handleChange}
+                        className={inputClass}
+                        required
+                    />
                 </div>
 
                 <div>
                     <label className="block font-semibold mb-1 text-[#1F3C88]">Available Date for Training Execution</label>
-                    <input type="text" name="availableForTrainingExecution" value={formData.availableForTrainingExecution} onChange={handleChange} className={inputClass} required />
+                    <input
+                        type="text"
+                        name="availableForTrainingExecution"
+                        value={formData.availableForTrainingExecution}
+                        onChange={handleChange}
+                        className={inputClass}
+                        required
+                    />
                 </div>
 
-                <button type="submit" className="w-full bg-[#1F3C88] text-white font-semibold py-2 rounded hover:bg-[#163179] transition">Submit</button>
+                <button
+                    type="submit"
+                    className="w-full bg-[#1F3C88] text-white font-semibold py-2 rounded hover:bg-[#163179] transition"
+                >
+                    Submit
+                </button>
             </form>
+
+            {/* Footer Section */}
+            <footer className="mt-8 flex items-center justify-center border-t pt-4 text-sm text-gray-600">
+                <img src={dlitheLogo} alt="DLithe Logo" className="h-7 mr-4" />
+                <span>Powered by <a href="https://www.dlithe.com" target="_blank" rel="noopener noreferrer" className="text-[#1F3C88] underline">www.dlithe.com</a></span>
+            </footer>
         </div>
     );
 }
