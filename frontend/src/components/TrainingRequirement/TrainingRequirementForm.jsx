@@ -121,7 +121,7 @@ function TrainingRequirementForm() {
                     </div>
                 ))}
 
-                {/* Availability as two separate fields */}
+                {/* Availability Fields */}
                 <div>
                     <label className="block font-semibold mb-1 text-[#1F3C88]">
                         Available Date for Scoping Call

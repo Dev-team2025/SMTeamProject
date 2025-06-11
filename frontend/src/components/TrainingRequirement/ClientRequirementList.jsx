@@ -82,22 +82,20 @@ function ClientRequirementList() {
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const year = String(now.getFullYear()).slice(-2);
-
-        // Format time in 12-hour with AM/PM
         let hours = now.getHours();
         const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
+        hours = hours % 12 || 12;
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
+        const timeString = `${hours}${minutes}${seconds}${ampm}`;
 
-        const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
-        const timestamp = `client_requirement-${day}-${month}-${year}-${timeString.replace(/:/g, '')}`;
+        const timestamp = `client_requirement-${day}-${month}-${year}-${timeString}`;
 
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
         const dataBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
         saveAs(dataBlob, `${timestamp}.xlsx`);
     };
+
 
     return (
         <>
