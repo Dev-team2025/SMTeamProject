@@ -124,7 +124,7 @@ function TrainingRequirementForm() {
                 {/* Availability as two separate fields */}
                 <div>
                     <label className="block font-semibold mb-1 text-[#1F3C88]">
-                        Available for Scoping Call
+                        Available Date for Scoping Call
                     </label>
                     <input
                         type="text"
@@ -138,7 +138,7 @@ function TrainingRequirementForm() {
 
                 <div>
                     <label className="block font-semibold mb-1 text-[#1F3C88]">
-                        Available for Training Execution
+                        Available Date for Training Execution
                     </label>
                     <input
                         type="text"
