@@ -113,14 +113,27 @@ const TrainerForm = () => {
                         className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
                         required
                     />
-                    <input
-                        type="text"
-                        placeholder="LinkedIn Profile URL"
-                        value={formData.linkedInProfile}
-                        onChange={e => setFormData({ ...formData, linkedInProfile: e.target.value })}
-                        className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                        required
-                    />
+
+                    {/* LinkedIn Field with Rounded Font Awesome Icon */}
+                    <div className="flex items-center space-x-3 col-span-1 md:col-span-2">
+                        <a
+                            href="https://www.linkedin.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-10 h-10 flex items-center justify-center bg-blue-700 rounded-full cursor-pointer hover:bg-blue-900 transition"
+                        >
+                            <i className="fa-brands fa-linkedin text-white text-xl"></i>
+                        </a>
+                        <input
+                            type="text"
+                            placeholder="LinkedIn Profile URL"
+                            value={formData.linkedInProfile}
+                            onChange={e => setFormData({ ...formData, linkedInProfile: e.target.value })}
+                            className="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            required
+                        />
+                    </div>
+
                     <div className="col-span-1 md:col-span-2">
                         <input
                             type="file"
@@ -133,6 +146,7 @@ const TrainerForm = () => {
                             required
                         />
                     </div>
+
                     <div className="col-span-1 md:col-span-2 text-center">
                         <button
                             type="submit"

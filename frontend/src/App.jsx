@@ -21,11 +21,7 @@ import TrainerResponse from './components/TrainingRequirement/TrainersResponse'
 import IndividualViewTrainerResponse from './components/TrainingRequirement/IndividualViewTrainerResponse';
 import CombinedDetails from './components/TrainingRequirement/CombinedDetails';
 
-<<<<<<< HEAD
 
-=======
-//archu!Pradeep1
->>>>>>> 16e5ae30fe9e29f90e58003db10070dceb5959dd
 
 function App() {
   return (

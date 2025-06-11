@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate, Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 
 function ClientRequirement() {
     const navigate = useNavigate();
@@ -19,8 +21,8 @@ function ClientRequirement() {
         labRequirement: '',
         proposalStatus: '',
         proposalValue: '',
-        remarks: '',             // New
-        assignmentCode: ''       // New
+        remarks: '',
+        assignmentCode: ''
     });
 
     const [clients, setClients] = useState([]);
@@ -33,6 +35,24 @@ function ClientRequirement() {
                 setClients(response.data);
             } catch (error) {
                 console.error('Error fetching clients:', error);
+            }
+        };
+        fetchClients();
+    }, []);
+    useEffect(() => {
+        const fetchClients = async () => {
+            try {
+                // Changed from POST to GET
+                const response = await axios.get('http://localhost:5000/api/client-requirements');
+                setClients(response.data);
+            } catch (error) {
+                console.error('Error fetching clients:', error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Failed to load clients",
+                    text: error.response?.data?.message || "Please try again later.",
+                    confirmButtonColor: "#d33"
+                });
             }
         };
         fetchClients();
@@ -50,6 +70,26 @@ function ClientRequirement() {
         }
     };
 
+    const startListening = (fieldName) => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("Speech Recognition not supported in this browser.");
+            return;
+        }
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-IN';
+        recognition.start();
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            setFormData(prev => ({ ...prev, [fieldName]: transcript }));
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Speech Recognition Error:", event.error);
+        };
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -62,7 +102,6 @@ function ClientRequirement() {
                 confirmButtonColor: "#1F3C88"
             });
 
-            // Reset form
             setFormData({
                 clientName: '',
                 requirements: '',
@@ -81,7 +120,6 @@ function ClientRequirement() {
             });
 
             setFilteredClients([]);
-
         } catch (error) {
             console.error('Submission error:', error);
             Swal.fire({
@@ -109,14 +147,23 @@ function ClientRequirement() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="relative">
                         <label className="font-semibold text-[#1F3C88]">Client Name</label>
-                        <input
-                            type="text"
-                            name="clientName"
-                            value={formData.clientName}
-                            onChange={handleChange}
-                            className={inputClass}
-                            placeholder="Start typing..."
-                        />
+                        <div className="relative">
+                            <input
+                                type="text"
+                                name="clientName"
+                                value={formData.clientName}
+                                onChange={handleChange}
+                                className={`${inputClass} pr-10`}
+                                placeholder="Start typing..."
+                            />
+                            <button
+                                type="button"
+                                onClick={() => startListening("clientName")}
+                                className="absolute right-3 top-3 text-gray-500 hover:text-blue-600"
+                            >
+                                <FontAwesomeIcon icon={faMicrophone} />
+                            </button>
+                        </div>
                         {filteredClients.length > 0 && (
                             <div className="absolute bg-white border rounded mt-1 w-full max-h-40 overflow-y-auto z-10">
                                 {filteredClients.map((client) => (
@@ -142,7 +189,7 @@ function ClientRequirement() {
                     </div>
                     <div>
                         <label className="font-semibold text-[#1F3C88]">Tentative Schedule</label>
-                        <input type="text" name="tentativeSchedule" value={formData.tentativeSchedule} onChange={handleChange} className={inputClass} />
+                        <input type="date" name="tentativeSchedule" value={formData.tentativeSchedule} onChange={handleChange} className={inputClass} />
                     </div>
                 </div>
 
@@ -166,18 +213,63 @@ function ClientRequirement() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="font-semibold text-[#1F3C88]">Training Location</label>
-                        <input type="text" name="trainingLocation" value={formData.trainingLocation} onChange={handleChange} className={inputClass} />
+                        <div className="relative">
+                            <input
+                                type="text"
+                                name="trainingLocation"
+                                value={formData.trainingLocation}
+                                onChange={handleChange}
+                                className={`${inputClass} pr-10`}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => startListening("trainingLocation")}
+                                className="absolute right-3 top-3 text-gray-500 hover:text-blue-600"
+                            >
+                                <FontAwesomeIcon icon={faMicrophone} />
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label className="font-semibold text-[#1F3C88]">Participant Background</label>
-                        <textarea name="participantBackground" value={formData.participantBackground} onChange={handleChange} className={inputClass} rows={2}></textarea>
+                        <div className="relative">
+                            <textarea
+                                name="participantBackground"
+                                value={formData.participantBackground}
+                                onChange={handleChange}
+                                className={`${inputClass} pr-10`}
+                                rows={2}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => startListening("participantBackground")}
+                                className="absolute right-3 top-3 text-gray-500 hover:text-blue-600"
+                            >
+                                <FontAwesomeIcon icon={faMicrophone} />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 {/* Requirements */}
                 <div>
                     <label className="font-semibold text-[#1F3C88]">Elaborated Requirements</label>
-                    <textarea name="requirements" value={formData.requirements} onChange={handleChange} className={inputClass} rows={3}></textarea>
+                    <div className="relative">
+                        <textarea
+                            name="requirements"
+                            value={formData.requirements}
+                            onChange={handleChange}
+                            className={`${inputClass} pr-10`}
+                            rows={3}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => startListening("requirements")}
+                            className="absolute right-3 top-3 text-gray-500 hover:text-blue-600"
+                        >
+                            <FontAwesomeIcon icon={faMicrophone} />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Lab Requirement */}
@@ -210,32 +302,50 @@ function ClientRequirement() {
                     </div>
                 </div>
 
-                {/* Conditionally render remarks if rejected */}
+                {/* Remarks */}
                 {formData.proposalStatus === 'rejected' && (
                     <div>
                         <label className="font-semibold text-[#1F3C88]">Remarks</label>
-                        <textarea
-                            name="remarks"
-                            value={formData.remarks}
-                            onChange={handleChange}
-                            className={inputClass}
-                            rows={2}
-                            placeholder="Reason for rejection"
-                        ></textarea>
+                        <div className="relative">
+                            <textarea
+                                name="remarks"
+                                value={formData.remarks}
+                                onChange={handleChange}
+                                className={`${inputClass} pr-10`}
+                                rows={2}
+                                placeholder="Reason for rejection"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => startListening("remarks")}
+                                className="absolute right-3 top-3 text-gray-500 hover:text-blue-600"
+                            >
+                                <FontAwesomeIcon icon={faMicrophone} />
+                            </button>
+                        </div>
                     </div>
                 )}
 
-                {/* Optional Assignment Code */}
+                {/* Assignment Code */}
                 <div>
                     <label className="font-semibold text-[#1F3C88]">Assignment Code (Optional)</label>
-                    <input
-                        type="text"
-                        name="assignmentCode"
-                        value={formData.assignmentCode}
-                        onChange={handleChange}
-                        className={inputClass}
-                        placeholder="Enter Assignment Code if any"
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            name="assignmentCode"
+                            value={formData.assignmentCode}
+                            onChange={handleChange}
+                            className={`${inputClass} pr-10`}
+                            placeholder="Enter Assignment Code if any"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => startListening("assignmentCode")}
+                            className="absolute right-3 top-3 text-gray-500 hover:text-blue-600"
+                        >
+                            <FontAwesomeIcon icon={faMicrophone} />
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" className="w-full bg-[#1F3C88] text-white font-semibold py-2 rounded mt-6 hover:bg-[#163179] transition">

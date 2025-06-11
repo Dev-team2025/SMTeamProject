@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 
 function TrainingRequirementForm() {
     const [formData, setFormData] = useState({
@@ -25,6 +27,26 @@ function TrainingRequirementForm() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const startListening = (fieldName) => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("Speech Recognition not supported in this browser.");
+            return;
+        }
+        const recognition = new SpeechRecognition();
+        recognition.lang = "en-IN";
+        recognition.start();
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            setFormData((prev) => ({ ...prev, [fieldName]: transcript }));
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Speech Recognition Error:", event.error);
+        };
     };
 
     const handleSubmit = async (e) => {
@@ -68,94 +90,62 @@ function TrainingRequirementForm() {
         }
     };
 
-    const inputClass =
-        "w-full border border-gray-300 rounded p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300";
+    const inputClass = "w-full border border-gray-300 rounded p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-300";
 
     return (
         <div className="max-w-4xl mx-auto bg-white shadow-md rounded p-8 mt-10">
-            <h2 className="text-2xl font-bold text-center text-[#1F3C88] mb-6">
-                Training Requirement Form
-            </h2>
+            <h2 className="text-2xl font-bold text-center text-[#1F3C88] mb-6">Training Requirement Form</h2>
             <form onSubmit={handleSubmit}>
                 {[
-                    ["submittedBy", "Submitted By"],
-                    ["trainingName", "Training Name"],
-                    ["contactNumber", "Contact Number"],
-                    ["email", "Email"],
-                ].map(([name, label]) => (
-                    <div key={name}>
-                        <label className="block font-semibold mb-1 text-[#1F3C88]">{label}</label>
-                        <input
-                            type={name === "email" ? "email" : "text"}
-                            name={name}
-                            value={formData[name]}
-                            onChange={handleChange}
-                            className={inputClass}
-                            required
-                        />
+                    "submittedBy",
+                    "trainingName",
+                    "contactNumber",
+                    "email",
+                    "preRequisites",
+                    "schedule",
+                    "programAgenda",
+                    "executionApproach",
+                    "labRequirements",
+                    "caseStudies",
+                    "expectedOutcome",
+                    "deliverables",
+                    "profileSummary",
+                    "commercials",
+                ].map((name) => (
+                    <div key={name} className="relative">
+                        <label className="block font-semibold mb-1 text-[#1F3C88]">{name.replace(/([A-Z])/g, " $1")}</label>
+                        <div className="relative">
+                            <input
+                                type={name === "email" ? "email" : "text"}
+                                name={name}
+                                value={formData[name]}
+                                onChange={handleChange}
+                                className={`${inputClass} pr-10`}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => startListening(name)}
+                                className="absolute right-3 top-3 text-gray-500 hover:text-blue-600"
+                            >
+                                <FontAwesomeIcon icon={faMicrophone} />
+                            </button>
+                        </div>
                     </div>
                 ))}
 
-                {[
-                    ["preRequisites", "Pre-requisites"],
-                    ["schedule", "Schedule"],
-                    ["programAgenda", "Program Agenda"],
-                    ["executionApproach", "Execution Approach"],
-                    ["labRequirements", "Lab Requirements (if any), along with ballpark cost"],
-                    ["caseStudies", "Case Studies/Use cases"],
-                    ["expectedOutcome", "Expected Outcome"],
-                    ["deliverables", "Deliverables"],
-                    ["profileSummary", "Your profile summary (also attach detailed technical profile in the email)"],
-                    ["commercials", "Your commercials (mention if any taxes applied as well, like GST)"],
-                ].map(([name, label]) => (
-                    <div key={name}>
-                        <label className="block font-semibold mb-1 text-[#1F3C88]">{label}</label>
-                        <textarea
-                            name={name}
-                            value={formData[name]}
-                            onChange={handleChange}
-                            className={inputClass}
-                            rows={2}
-                            required
-                        />
-                    </div>
-                ))}
-
-                {/* Availability Fields */}
+                {/* Availability Fields (without voice input) */}
                 <div>
-                    <label className="block font-semibold mb-1 text-[#1F3C88]">
-                        Available Date for Scoping Call
-                    </label>
-                    <input
-                        type="text"
-                        name="availableForScopingCall"
-                        value={formData.availableForScopingCall}
-                        onChange={handleChange}
-                        className={inputClass}
-                        required
-                    />
+                    <label className="block font-semibold mb-1 text-[#1F3C88]">Available Date for Scoping Call</label>
+                    <input type="text" name="availableForScopingCall" value={formData.availableForScopingCall} onChange={handleChange} className={inputClass} required />
                 </div>
 
                 <div>
-                    <label className="block font-semibold mb-1 text-[#1F3C88]">
-                        Available Date for Training Execution
-                    </label>
-                    <input
-                        type="text"
-                        name="availableForTrainingExecution"
-                        value={formData.availableForTrainingExecution}
-                        onChange={handleChange}
-                        className={inputClass}
-                        required
-                    />
+                    <label className="block font-semibold mb-1 text-[#1F3C88]">Available Date for Training Execution</label>
+                    <input type="text" name="availableForTrainingExecution" value={formData.availableForTrainingExecution} onChange={handleChange} className={inputClass} required />
                 </div>
 
-                <button
-                    type="submit"
-                    className="w-full bg-[#1F3C88] text-white font-semibold py-2 rounded hover:bg-[#163179] transition"
-                >
-                    Submit
-                </button>
+                <button type="submit" className="w-full bg-[#1F3C88] text-white font-semibold py-2 rounded hover:bg-[#163179] transition">Submit</button>
             </form>
         </div>
     );

@@ -91,12 +91,7 @@ const TrainerResponse = () => {
                                         >
                                             View
                                         </button>
-                                        <button
-                                            onClick={() => handleDelete(item._id)}
-                                            className="text-red-600 hover:underline"
-                                        >
-                                            Delete
-                                        </button>
+
                                     </td>
                                 </tr>
                             ))
